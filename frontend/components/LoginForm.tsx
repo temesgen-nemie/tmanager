@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    // ✅ Only use Zod validation - it already checks for required fields
     const result = loginSchema.safeParse({ email, password });
 
     if (!result.success) {
@@ -30,7 +29,6 @@ export default function LoginPage() {
     try {
       const res = await api.post("/auth/login", result.data);
 
-      // Save user & token in Zustand
       login(res.data.user, res.data.token);
 
       toast.success("Logged in successfully!", { id: toastId });
@@ -54,13 +52,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
+    <div className="flex flex-col items-center justify-center bg-gray-50 p-4 min-h-screen">
+      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
+        <h1 className="text-3xl font-bold mb-2 text-center">Login</h1>
 
+        {/* Email/Password Login */}
         <input
           type="email"
-          className="border p-3 mb-3 w-full rounded"
+          className="border p-3 w-full rounded"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +67,7 @@ export default function LoginPage() {
 
         <input
           type="password"
-          className="border p-3 mb-3 w-full rounded"
+          className="border p-3 w-full rounded"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -85,6 +84,16 @@ export default function LoginPage() {
         >
           {isLoading ? "Logging in..." : "Login"}
         </button>
+
+        <div className="text-center my-2">or</div>
+
+        {/* Google OAuth Login */}
+        <a
+          href={`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`}
+          className="w-full py-3 text-center bg-red-500 hover:bg-red-600 text-white rounded font-medium transition"
+        >
+          Login with Google
+        </a>
       </div>
     </div>
   );

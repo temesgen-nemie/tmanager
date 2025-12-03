@@ -1,5 +1,4 @@
 import Joi from 'joi';
-
 // Create Task Validation
 export const createTaskSchema = Joi.object({
   title: Joi.string().required().messages({
